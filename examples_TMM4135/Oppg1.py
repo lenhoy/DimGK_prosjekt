@@ -1,11 +1,3 @@
-"""
-Created on Sun Oct 21 16:38:14 2018
-Edited on Thu Dec 09 09:02:36 2021 
-
-@author: bjohau
-@editor: eliashk
-"""
-
 import numpy as np
 
 def plante(ex,ey,ep,D,eq=None):
@@ -19,6 +11,8 @@ def plante(ex,ey,ep,D,eq=None):
     else:
         Dinv = np.inv(D)
         return tri3e(ex,ey,Dinv,ep[1],eq)
+
+#(a)
 
 def tri3e(ex,ey,D,th,eq=None):
    
@@ -41,8 +35,9 @@ def tri3e(ex,ey,D,th,eq=None):
                     [dzeta_dy[0], dzeta_dx[0], dzeta_dy[1], dzeta_dx[1], dzeta_dy[2], dzeta_dx[2]]
                 ])
 
-    #elementstivhetsmatrisa
-    Ke = A*th*(np.transpose(B)*D*B)
+    #elementstivhetsmatrisa vha. integrasjon
+    DB = np.dot(D, B)
+    Ke = np.dot(np.transpose(B), DB)*A*th
 
     if eq is None:  #fordelt last
 
@@ -58,11 +53,11 @@ def tri3e(ex,ey,D,th,eq=None):
     
 def zeta_partials_x_and_y(ex,ey):
 
-    tmp = np.array([[1,ex[0],ey[0]],
+    A_mat = np.array([[1,ex[0],ey[0]],
                     [1,ex[1],ey[1]],
                     [1,ex[2],ey[2]]])
     
-    A2 = np.linalg.det(tmp)  # Double of triangle area
+    A2 = np.linalg.det(A_mat)  # Double of triangle area
        
     cyclic_ijk = [0,1,2,0,1]      # Cyclic permutation of the nodes i,j,k
     
@@ -71,16 +66,16 @@ def zeta_partials_x_and_y(ex,ey):
 
     ##################################TODO####################################
     for i in range(0, 3):
-        j = cyclic_ijk[i+1]
-        k = cyclic_ijk[i+2]
-        dzeta_dx[i] = (ey[j]-ey[k])/A2
-        dzeta_dy[i] = (ex[k]-ex[j])/A2
+        j = cyclic_ijk[i+1]                 #j = i+1
+        k = cyclic_ijk[i+2]                 #k = i+2
+        dzeta_dx[i] = (ey[j]-ey[k])/A2      #vi/2A
+        dzeta_dy[i] = (ex[k]-ex[j])/A2      #ci/2A
 
     ##########################################################################
 
     return dzeta_dx, dzeta_dy
 
-# Functions for 6 node triangle
+#(b)
     
 def tri6_area(ex,ey):
         
@@ -88,14 +83,14 @@ def tri6_area(ex,ey):
                     [1,ex[1],ey[1]],
                     [1,ex[2],ey[2]]])
     
-    A = np.linalg.det(A_mat)/2
+    A = np.linalg.det(A_mat)/2              #areal
     
     return A
 
 
 def tri6_shape_functions(zeta):
     
-    N6 = np.zeros(6)
+    N6 = np.zeros(6)                        #formfunksjonene fra N1 til N6
 
     ##################################TODO####################################
     for i in range(0, 3):
@@ -109,59 +104,80 @@ def tri6_shape_functions(zeta):
 
 def tri6_shape_function_partials_x_and_y(zeta,ex,ey):
     
-    dzeta_dx, dzeta_dy = zeta_partials_x_and_y(ex,ey)
+    dzeta_dx, dzeta_dy = zeta_partials_x_and_y(ex,ey)       #partiellderiverte av zeta 
     
-    N6_dx = np.zeros(6)
-    N6_dy = np.zeros(6)
+    N_dx = np.zeros(6)                                      #partiellderivert formfunksjon
+    N_dy = np.zeros(6)                                      #partiellderivert formfunksjon
     
-    cyclic_ijk = [0,1,2,0,1]      # Cyclic permutation of the nodes i,j,k
+    cyclic_ijk = [0,1,2,0,1]                                # Cyclic permutation of the nodes i,j,k
 
     ##################################TODO####################################
     for i in range(0, 3):
-        N6_dx[i]=(4*zeta[i]-1)*dzeta_dx[i] #renger ut dette for hånd
-        N6_dy[i]=(4*zeta[i]-1)*dzeta_dy[i]
+        N_dx[i]=(4*zeta[i]-1)*dzeta_dx[i]                              #N/dx i=1-3 
+        N_dx[i+3]=4*zeta[i]*dzeta_dx[i-2] + 4*zeta[i-2]*dzeta_dx[i]    #N/dx i=4-6
 
-        N6_dx[i+3]=4*zeta[i]*dzeta_dx[i-2] + 4*zeta[i-2]*dzeta_dx[i]
-        N6_dy[i+3]=4*zeta[i]*dzeta_dy[i-2] + 4*zeta[i-2]*dzeta_dy[i]
+        N_dy[i]=(4*zeta[i]-1)*dzeta_dy[i]                              #N/dy i=1-3
+        N_dy[i+3]=4*zeta[i]*dzeta_dy[i-2] + 4*zeta[i-2]*dzeta_dy[i]    #N/dy i=4-6
     ##########################################################################
 
-    return N6_dx, N6_dy
+    return N_dx, N_dy
 
 
 def tri6_Bmatrix(zeta,ex,ey):
     
-    nx,ny = tri6_shape_function_partials_x_and_y(zeta, ex, ey)
+    nx,ny = tri6_shape_function_partials_x_and_y(zeta, ex, ey)          #partiellderiverte formfunksjoner
 
-    Bmatrix = np.zeros((3,12))
+    B = np.zeros((3,12))                                                #3x12-matrise
 
-    # TODO: fill out missing parts (or reformulate completely)
+                                                                        #B = 
+                                                                        #    [      N_u,x      ]
+                                                                        #    [      N_v,y      ]
+                                                                        #    [ (N_v,x + N_u,x) ]
 
-    return Bmatrix
+    ##################################TODO####################################
+    for i in range(0, 6):
+        B[0,   i*2  ] = nx[i]                                           #N/dx
+        B[2, (i*2)+1] = nx[i]                                           #N/dx
+
+        B[1, (i*2)+1] = ny[i]                                           #N/dy
+        B[2,   i*2  ] = ny[i]                                           #N/dy
+        
+    ##########################################################################
+
+    return B
 
 
 def tri6_Kmatrix(ex,ey,D,th,eq=None):
     
-    zetaInt = np.array([[0.5,0.5,0.0],
+    zetaInt = np.array([[0.5,0.5,0.0],                                  #zeta
                         [0.0,0.5,0.5],
                         [0.5,0.0,0.5]])
     
-    wInt = np.array([1.0/3.0,1.0/3.0,1.0/3.0])
+    wInt = np.array([1.0/3.0,1.0/3.0,1.0/3.0])                          #vekt wi
 
-    A    = tri6_area(ex,ey)
+    A = tri6_area(ex,ey)                                                #areal
     
-    # Ke = np.zeros((12,12))
-    Ke = np.eye(12)
-
-    # TODO: fill out missing parts (or reformulate completely)
+    Ke = np.zeros((12,12))
+    
+    ##################################TODO####################################
+    for i in range(0, 3):
+        B = tri6_Bmatrix(zetaInt[i], ex, ey)
+        DB = np.dot(D, B)
+        Ke += np.dot(np.transpose(B), DB)*A*th*wInt[i]                            #Ke = Ke + (B^T*C*B) *w*A*t
 
     if eq is None:
         return Ke
     else:
-        fe = np.zeros((12,1))
+        fe = np.zeros((12,1))                                           #fe = integrate(N^T * [qx, qy]^T dV)
+        N = tri6_shape_functions(zetaInt[i])
 
-        # TODO: fill out missing parts (or reformulate completely)
+        for i in range(0, 3):
+            for j in range(0, 6):
+                fe[0 + 2*j] += N[j]*eq[0]*wInt[i]*A*th
+                fe[1 + 2*j] += N[j]*eq[1]*wInt[i]*A*th
 
         return Ke, fe
+    ##########################################################################
 
 def tri6e(ex,ey,D,th,eq=None):
     return tri6_Kmatrix(ex,ey,D,th,eq)
