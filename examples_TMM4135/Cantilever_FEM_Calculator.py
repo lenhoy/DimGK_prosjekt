@@ -203,6 +203,8 @@ for iel in range(numElements):
 
 r, R0 = cfc.solveq(K,R,bc)
 
+print(f"Cantilever with {numElementNodes} nodes")
+
 nodMiddle = numNodesY//2 +1  # Mid nod on right edge
 xC = r[-(nodMiddle*2)  ,0] # 2 dofs per node, so this is the middle dof on end
 yC = r[-(nodMiddle*2)+1,0] # 2 dofs per node, so this is the middle dof on end
