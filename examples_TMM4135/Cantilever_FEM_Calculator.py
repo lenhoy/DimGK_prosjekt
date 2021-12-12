@@ -6,13 +6,13 @@ Created on Sun Oct 21 16:38:14 2018
 """
 import numpy as np
 import calfem.core as cfc
-import triangles_with_TODO as tri
+import Oppg1 as tri
 import quads_with_TODO as quad
 import calfem.vis as cfv
 
 # Element Type
 
-numElementNodes = 9  # Valid numbers 3, 4, 6, 9
+numElementNodes = 3  # Valid numbers 3, 4, 6, 9
 
 elTypeInfo= [-1,'Unknown elementtype']
 
