@@ -12,7 +12,7 @@ import calfem.vis as cfv
 
 # Element Type
 
-numElementNodes = 3  # Valid numbers 3, 4, 6, 9
+numElementNodes = 9  # Valid numbers 3, 4, 6, 9
 
 elTypeInfo= [-1,'Unknown elementtype']
 
@@ -161,8 +161,8 @@ if bDrawMesh:
     cfv.drawMesh(
         coords=coords,
         edof=eldofs,
-        dofs_per_node=2,
-        el_type=elTypeInfo[0],
+        dofsPerNode=2,
+        elType=elTypeInfo[0],
         filled=True,
         title=elTypeInfo[1])
     cfv.showAndWait()
@@ -232,8 +232,8 @@ if bDrawMesh:
     cfv.drawDisplacements(displacements=disp,
         coords=coords,
         edof=eldofs,
-        dofs_per_node=2,
-        el_type=elTypeInfo[0],
+        dofsPerNode=2,
+        elType=elTypeInfo[0],
         title=elTypeInfo[1])
 
     cfv.showAndWait()
