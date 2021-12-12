@@ -12,7 +12,7 @@ import calfem.vis as cfv
 
 # Element Type
 
-numElementNodes = 3  # Valid numbers 3, 4, 6, 9
+numElementNodes = 9  # Valid numbers 3, 4, 6, 9
 
 elTypeInfo= [-1,'Unknown elementtype']
 
@@ -27,9 +27,9 @@ elif numElementNodes == 9:
     elTypeInfo= [10,'9 node Quad mesh']
 
 # Number of nodes: Should be odd numbers in order to handle
-
-numNodesX = 10
-numNodesY = 4
+scale = 4 # For increasing amount of nodes at same ratio
+numNodesX = 10 * scale
+numNodesY = 4 * scale
 
 # number of patches that will fit a 9 node element
 numPatchX = (numNodesX-1) // 2
