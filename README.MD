@@ -1,15 +1,9 @@
 # TMM4135 Dimensjonering basert på elementmetoden prosjekt del 2
 
-
-### Note om vis
-Det er gjort endringer av vis.py, som er en del av calfem repo, filen med endringer ligger under. Endringene går ut på "is not"->"!=" siden dette eller gir problemer i python >3.8.
-
-I tillegg er det lagt til verdier for element type 9, 10 (tri6 og quad9) i: 
- - fPerElms
- - _preMeshDrawPrep()
-
-
 ## Installasjon
+Kopier filene i mappen "calfem" fra handout zip filen til lokal installasjon av calfem (i virtual env/Lib/site-packages)
+
+
 Dersom du ikke har pipenv:  
 ```terminal
 pip install pipenv 
