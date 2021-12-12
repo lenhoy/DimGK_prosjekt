@@ -232,8 +232,8 @@ if bDrawMesh:
     cfv.drawDisplacements(displacements=disp,
         coords=coords,
         edof=eldofs,
-        dofsPerNode=2,
-        elType=elTypeInfo[0],
+        dofs_per_node=2,
+        el_type=elTypeInfo[0],
         title=elTypeInfo[1])
 
     cfv.showAndWait()

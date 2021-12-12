@@ -19,7 +19,7 @@ Created on Sun Oct 21 16:38:14 2018
 
 import numpy as np
 import calfem.core as cfc
-import triangles_with_TODO as tri
+import Oppg1 as tri
 
 # ----- Topology -------------------------------------------------
 ex = np.array([0.,1.,0.])
