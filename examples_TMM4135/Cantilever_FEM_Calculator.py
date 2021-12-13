@@ -12,7 +12,7 @@ import calfem.vis as cfv
 
 # Element Type
 
-numElementNodes = 9  # Valid numbers 3, 4, 6, 9
+numElementNodes = 3  # Valid numbers 3, 4, 6, 9
 
 elTypeInfo= [-1,'Unknown elementtype']
 
@@ -27,7 +27,7 @@ elif numElementNodes == 9:
     elTypeInfo= [10,'9 node Quad mesh']
 
 # Number of nodes: Should be odd numbers in order to handle
-scale = 4 # For increasing amount of nodes at same ratio
+scale = 1 # For increasing amount of nodes at same ratio
 numNodesX = 10 * scale
 numNodesY = 4 * scale
 
@@ -231,7 +231,7 @@ if bDrawMesh:
         disp[i,0] = r[i*2   ,0] * scale
         disp[i,1] = r[i*2 +1,0] * scale
 
-    cfv.drawDisplacements(displacements=disp,
+    mesh = cfv.drawDisplacements(displacements=disp, #Return mesh for saving
         coords=coords,
         edof=eldofs,
         dofsPerNode=2,
