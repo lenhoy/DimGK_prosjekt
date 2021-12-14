@@ -2715,13 +2715,13 @@ def planqe(ex,ey,ep,D,eq=None):
     b1 = eq if eq is not None else np.array([[0],[0]])
     
     ke1, fe1 = plante(np.array([ex[0], ex[1], xm]), np.array([ey[0], ey[1], ym]), ep, D, b1)
-    K, f = assem(np.array([1, 2, 3, 4, 9, 10]), K, ke1, f, fe1)
+    K, f = assem(np.array([1, 2, 3, 4, 9, 10]), K, ke1, f, fe1.T)
     ke1, fe1 = plante(np.array([ex[1], ex[2], xm]), np.array([ey[1], ey[2], ym]), ep, D, b1)
-    K, f = assem(np.array([3, 4, 5, 6, 9, 10]), K, ke1, f, fe1)
+    K, f = assem(np.array([3, 4, 5, 6, 9, 10]), K, ke1, f, fe1.T)
     ke1, fe1 = plante(np.array([ex[2], ex[3], xm]), np.array([ey[2], ey[3], ym]), ep, D, b1)
-    K, f = assem(np.array([5, 6, 7, 8, 9, 10]), K, ke1, f, fe1)
+    K, f = assem(np.array([5, 6, 7, 8, 9, 10]), K, ke1, f, fe1.T)
     ke1, fe1 = plante(np.array([ex[3], ex[0], xm]), np.array([ey[3], ey[0], ym]), ep, D, b1)
-    K, f = assem(np.array([7, 8, 1, 2, 9, 10]), K, ke1, f, fe1)
+    K, f = assem(np.array([7, 8, 1, 2, 9, 10]), K, ke1, f, fe1.T)
     Ke, fe = statcon(K, f, np.array([[9],[10]]))
     
     if eq is None:
