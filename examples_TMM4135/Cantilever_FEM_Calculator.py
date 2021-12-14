@@ -13,8 +13,8 @@ import calfem.vis as cfv
 #------------- Define element type, cantilever dimentions, number of nodes and material properties -----------------------------
 
 # Select element type
-numElementNodes = 8  # Valid numbers 3, 33, 4, 44, 6, 8, 9
-# 33, 44 and 8 are existing 3, 4 and 8 node element-types
+numElementNodes = 4  # Valid numbers 3, 33, 4, 44, 6, 9
+# 33 and 44 are existing 3 and 4 node element-types
 
 # Cantilever with dimensions H x L x thickness
 H         =  2.0
@@ -63,8 +63,6 @@ elif numElementNodes == 44:
     elTypeInfo= [3,'Existing 4 node Quad mesh'] #No change in the meshing func, only in Ke, fe
 elif numElementNodes == 6:
     elTypeInfo= [9,'6 node Triangle mesh']
-elif numElementNodes == 8:
-    elTypeInfo= [16,'Existing 8 node Quad mesh'] #Using 8 node second order quad in gmsh
 elif numElementNodes == 9:
     elTypeInfo= [10,'9 node Quad mesh']
 
@@ -224,8 +222,6 @@ for iel in range(numElements):
         #K_el, f_el = cfc.planqe(ex[iel],ey[iel], ep=ep[0:2], D=Dmat,eq=eq) # Trying different existing element functions
         ep[2] = 2 # Number of points for gauss integration 1-3. Used by plani4e
         K_el, f_el = cfc.plani4e(ex[iel],ey[iel], ep=ep, D=Dmat,eq=eq) # Also Using 2 point gaussian integration
-    elif numElementNodes == 8: #Existing 8 node quad
-        K_el, f_el = cfc.flw2i8e(ex[iel], ey[iel], Dmat, thickness, eq)
     elif numElementNodes == 9:
         K_el, f_el = quad.quad9e(ex[iel],ey[iel],Dmat,thickness,eq)
 
