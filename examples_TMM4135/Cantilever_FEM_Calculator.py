@@ -6,14 +6,14 @@ Created on Sun Oct 21 16:38:14 2018
 """
 import numpy as np
 import calfem.core as cfc
-import Oppg1 as tri
+import tri_with_TODO as tri
 import quads_with_TODO as quad
 import calfem.vis as cfv
 
 #------------- Define element type, cantilever dimentions, number of nodes and material properties -----------------------------
 
 # Select element type
-numElementNodes = 4  # Valid numbers 3, 33, 4, 44, 6, 9
+numElementNodes = 3  # Valid numbers 3, 33, 4, 44, 6, 9
 # 33 and 44 are existing 3 and 4 node element-types
 
 # Cantilever with dimensions H x L x thickness

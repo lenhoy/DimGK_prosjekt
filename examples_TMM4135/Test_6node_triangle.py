@@ -19,7 +19,7 @@ Created on Sun Oct 21 16:38:14 2018
 
 import numpy as np
 import calfem.core as cfc
-import Oppg1 as tri
+import tri_with_TODO as tri
 
 cyclic_ijk = [0,1,2,0,1]      # Cyclic permutation of the nodes i,j,k
 

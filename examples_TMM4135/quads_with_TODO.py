@@ -86,7 +86,7 @@ def quad4_shapefuncs_grad_eta(xsi, eta):
 
     return Ndeta
 
-def quad4e(ex, ey, D, thickness, eq=None):
+def quad4e(ex, ey, D, thickness, eq=None, returnBmat=False):
     """
     Calculates the stiffness matrix for a 8 node isoparametric element in plane stress
 
@@ -98,11 +98,13 @@ def quad4e(ex, ey, D, thickness, eq=None):
         thickness:      Element thickness
         eq = [bx; by]       bx:     body force in x direction
                             by:     body force in y direction
+        returnBmat[bool]: Default=False. Returns the Bmatrix as 3rd output if True
 
     Returns:
 
         Ke : element stiffness matrix (8 x 8)
         fe : equivalent nodal forces (4 x 1)
+        B  : (not returned by default) Deformation matrix
 
     """
     t = thickness
@@ -174,6 +176,8 @@ def quad4e(ex, ey, D, thickness, eq=None):
             Ke += (B.T) @ D @ B * detJ * t * gw[iGauss] * gw[jGauss]
             fe += (N2.T) @ f    * detJ * t * gw[iGauss] * gw[jGauss]
 
+    if returnBmat: # if specified, return B matrix aswell
+        return Ke, fe, B
     return Ke, fe  # Returns stiffness matrix and nodal force vector
 
 
@@ -226,7 +230,7 @@ def quad9_shapefuncs_grad_eta(xsi, eta):
 
     return Ndeta
 
-def quad9e(ex,ey,D,th,eq=None):
+def quad9e(ex,ey,D,th,eq=None, returnBmat=False):
     """
     Compute the stiffness matrix for a nine node membrane element.
 
@@ -235,8 +239,10 @@ def quad9e(ex,ey,D,th,eq=None):
     :param list D : 2D constitutive matrix
     :param list th: element thickness
     :param list eq: distributed loads, local directions [bx, by]
+    :param bool returnBmat: Returns the Bmatrix as 3rd output if True
     :return mat Ke: element stiffness matrix [6 x 6]
     :return mat fe: consistent load vector [6 x 1] (if eq!=None)
+    :(not by default) return mat B:  Deformation Matrix
     """
 
     if eq is None:
@@ -309,4 +315,6 @@ def quad9e(ex,ey,D,th,eq=None):
             Ke += (B.T) @ D @ B * detJ * th * gw[iGauss] * gw[jGauss]
             fe += (N2.T) @ f    * detJ * th * gw[iGauss] * gw[jGauss]
 
+    if returnBmat: # if specified, return B matrix aswell
+        return Ke, fe, B
     return Ke, fe  # Returns stiffness matrix and nodal force vector
