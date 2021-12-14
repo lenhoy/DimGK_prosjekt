@@ -10,26 +10,73 @@ import Oppg1 as tri
 import quads_with_TODO as quad
 import calfem.vis as cfv
 
-# Element Type
+#------------- Define element type, cantilever dimentions, number of nodes and material properties -----------------------------
 
-numElementNodes = 3  # Valid numbers 3, 4, 6, 9
+# Select element type
+numElementNodes = 8  # Valid numbers 3, 33, 4, 44, 6, 8, 9
+# 33, 44 and 8 are existing 3, 4 and 8 node element-types
 
-elTypeInfo= [-1,'Unknown elementtype']
+# Cantilever with dimensions H x L x thickness
+H         =  2.0
+L         = 10.0
+thickness =  0.1
 
-meshText = 'Unknown mesh'
-if numElementNodes == 3:
-    elTypeInfo= [2,'3 Node Triangle']
-elif numElementNodes == 4:
-    elTypeInfo= [3,'4 node Quad mesh']
-elif numElementNodes == 6:
-    elTypeInfo= [9,'6 node Triangle mesh']
-elif numElementNodes == 9:
-    elTypeInfo= [10,'9 node Quad mesh']
+# Distributed load in x and y, load pr unit area
+#eq = np.array([1.0e100,1.0e3]) #ekstrem load i x for å teste hvordan det ville sett ut
+eq = np.array([0.,0.])
+
+
+#End load, Given as resultant
+
+#endLoadXY = np.array([0.,0.]) #no load at end
+endLoadXY = np.array([0.0,3.0e6])
+#endLoadXY = np.array([3.0e6,0])
+#endLoadXY = np.array([4.2e9,0.0]) # Should give unit disp at Poisson = 0
+
+eqTotal = eq * L * H * thickness #Total load for plotting purpose
+
+# Material properties and thickness
+ep = [1,thickness, 2] #ep[2]: some of the cfc functions need a number of gausspoints
+E  = 2.1e11
+nu = 0.3
+Dmat = np.mat([
+        [ 1.0,  nu,  0.],
+        [  nu, 1.0,  0.],
+        [  0.,  0., (1.0-nu)/2.0]]) * E/(1.0-nu**2)
 
 # Number of nodes: Should be odd numbers in order to handle
 scale = 1 # For increasing amount of nodes at same ratio
 numNodesX = 10 * scale
 numNodesY = 4 * scale
+meshText = 'Unknown mesh'
+
+
+
+elTypeInfo= [-1,'Unknown elementtype']
+if numElementNodes == 3:
+    elTypeInfo= [2,'Our 3 Node Triangle']
+elif numElementNodes == 33:
+    elTypeInfo= [2,'Existing 3 Node Triangle']
+elif numElementNodes == 4:
+    elTypeInfo= [3,'Our 4 node Quad mesh']
+elif numElementNodes == 44:
+    elTypeInfo= [3,'Existing 4 node Quad mesh'] #No change in the meshing func, only in Ke, fe
+elif numElementNodes == 6:
+    elTypeInfo= [9,'6 node Triangle mesh']
+elif numElementNodes == 8:
+    elTypeInfo= [16,'Existing 8 node Quad mesh'] #Using 8 node second order quad in gmsh
+elif numElementNodes == 9:
+    elTypeInfo= [10,'9 node Quad mesh']
+
+# Variable for distinguishing our and existing implementation
+existingImpl = False
+if numElementNodes == 44:
+    existingImpl = True
+    numElementNodes = 4
+elif numElementNodes == 33:
+    existingImpl = True
+    numElementNodes = 3
+    
 
 # number of patches that will fit a 9 node element
 numPatchX = (numNodesX-1) // 2
@@ -49,32 +96,6 @@ else:
 
 bDrawMesh = True
 
-# Cantilever with dimensions H x L x thickness
-H         =  2.0
-L         = 10.0
-thickness =  0.1
-
-# Distributed load in x and y, load pr unit area
-eq = np.array([0.,1.0e3])
-eq = np.array([0.,0.])
-#End load, Given as resultant
-
-endLoadXY = np.array([0.0,3.0e6])
-#endLoadXY = np.array([3.0e6,0])
-#endLoadXY = np.array([4.2e9,0.0]) # Should give unit disp at Poisson = 0
-
-
-eqTotal = eq * L * H * thickness #Total load for plotting purpose
-
-# Material properties and thickness
-
-ep = [1,thickness]
-E  = 2.1e11
-nu = 0.3
-Dmat = np.mat([
-        [ 1.0,  nu,  0.],
-        [  nu, 1.0,  0.],
-        [  0.,  0., (1.0-nu)/2.0]]) * E/(1.0-nu**2)
 
 numNodes    = numNodesX * numNodesY
 numElements = numElementsX * numElementsY
@@ -190,20 +211,29 @@ for i in range(numNodesY):
     R[-(i*2+1),0] = endLoadXY[1] / numNodesY
 
 for iel in range(numElements):
-    if numElementNodes == 3:
+    if numElementNodes == 3 and not existingImpl:
         K_el, f_el = tri.tri3e(ex[iel],ey[iel],Dmat,thickness,eq)
+    if numElementNodes == 3 and existingImpl:
+        K_el, f_el = cfc.plante(ex[iel],ey[iel], ep=ep[:2], D=Dmat,eq=eq) # Existing 3 node tri. 
+        f_el = f_el.T # Have to transpose this to fit the given system of implementations
     elif numElementNodes == 6:
         K_el, f_el = tri.tri6e(ex[iel],ey[iel],Dmat,thickness,eq)
-    elif numElementNodes == 4:
+    elif numElementNodes == 4 and not existingImpl: #Our implementation
         K_el, f_el = quad.quad4e(ex[iel],ey[iel],Dmat,thickness,eq)
+    elif numElementNodes == 4 and existingImpl: #Existing 4 node quad
+        #K_el, f_el = cfc.planqe(ex[iel],ey[iel], ep=ep[0:2], D=Dmat,eq=eq) # Trying different existing element functions
+        ep[2] = 2 # Number of points for gauss integration 1-3. Used by plani4e
+        K_el, f_el = cfc.plani4e(ex[iel],ey[iel], ep=ep, D=Dmat,eq=eq) # Also Using 2 point gaussian integration
+    elif numElementNodes == 8: #Existing 8 node quad
+        K_el, f_el = cfc.flw2i8e(ex[iel], ey[iel], Dmat, thickness, eq)
     elif numElementNodes == 9:
         K_el, f_el = quad.quad9e(ex[iel],ey[iel],Dmat,thickness,eq)
 
-    cfc.assem(eldofs[iel],K,K_el,R,f_el)
+    cfc.assem(eldofs[iel],K,K_el,R,f_el) # Assemble System K matrix
 
 r, R0 = cfc.solveq(K,R,bc)
 
-print(f"Cantilever with {numElementNodes} nodes")
+print(f"Cantilever with {numElementNodes} element nodes and {numNodes} nodes")
 
 nodMiddle = numNodesY//2 +1  # Mid nod on right edge
 xC = r[-(nodMiddle*2)  ,0] # 2 dofs per node, so this is the middle dof on end
