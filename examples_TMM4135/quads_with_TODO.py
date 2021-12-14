@@ -173,7 +173,7 @@ def quad4e(ex, ey, D, thickness, eq=None):
             # Evaluates integrand at current integration points and adds to final solution
             Ke += (B.T) @ D @ B * detJ * t * gw[iGauss] * gw[jGauss]
             fe += (N2.T) @ f    * detJ * t * gw[iGauss] * gw[jGauss]
-    print("Own Ke, fe", Ke, fe) #TODO remove me
+
     return Ke, fe  # Returns stiffness matrix and nodal force vector
 
 
