@@ -152,14 +152,12 @@ def quad4e(ex, ey, D, thickness, eq=None):
                 if(i%2 == 0):
                     B[0][i] = dNdx[i // 2]
                     B[2][i] = dNdy[i // 2]
-            #TODO: add else = 0 again?
 
             for i in range(8):
 
                 if(i%2 == 1):
                     B[1][i] = dNdy[i // 2]
                     B[2][i] = dNdx[i // 2]
-            #TODO: add else = 0 again?
 
 
             #TODO: Fill out correct values for displacement interpolation xsi and eta
@@ -175,7 +173,7 @@ def quad4e(ex, ey, D, thickness, eq=None):
             # Evaluates integrand at current integration points and adds to final solution
             Ke += (B.T) @ D @ B * detJ * t * gw[iGauss] * gw[jGauss]
             fe += (N2.T) @ f    * detJ * t * gw[iGauss] * gw[jGauss]
-
+    print("Own Ke, fe", Ke, fe) #TODO remove me
     return Ke, fe  # Returns stiffness matrix and nodal force vector
 
 
