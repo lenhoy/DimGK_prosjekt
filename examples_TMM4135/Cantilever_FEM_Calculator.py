@@ -13,7 +13,7 @@ import calfem.vis as cfv
 #------------- Define element type, cantilever dimentions, number of nodes and material properties -----------------------------
 
 # Select element type
-numElementNodes = 3  # Valid numbers 3, 33, 4, 44, 6, 9
+numElementNodes = 9  # Valid numbers 3, 33, 4, 44, 6, 9
 # 33 and 44 are existing 3 and 4 node element-types
 
 # Cantilever with dimensions H x L x thickness
@@ -46,8 +46,8 @@ Dmat = np.mat([
 
 # Number of nodes: Should be odd numbers in order to handle
 scale = 1 # For increasing amount of nodes at same ratio
-numNodesX = 10 * scale
-numNodesY = 4 * scale
+numNodesX = 5 * scale 
+numNodesY = 2 * scale
 meshText = 'Unknown mesh'
 
 
