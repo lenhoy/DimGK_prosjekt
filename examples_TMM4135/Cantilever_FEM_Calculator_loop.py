@@ -325,7 +325,7 @@ if __name__=="__main__":
 
     for elt in elementTypes: # Calculate for all elementtypes
         
-        for scaleNumNodes in range(25): # How many iterations with increasing number of nodes
+        for scaleNumNodes in range(40): # How many iterations with increasing number of nodes
             
             # Increase amount of nodes at same ratio
             numNodesX = 10 + 2 * scaleNumNodes 
@@ -343,4 +343,5 @@ if __name__=="__main__":
     # Export to csv file
     exportData = pd.DataFrame(dict, columns=["Nods pr el","Tot nods","xC","yC","Tot.react.force x","Tot.react.force y","exist impl."])
     exportData.to_csv("exportdata.csv")
+    exportData.to_excel("exportdata.xlsx")
     print("newdataRow\n",exportData.head(10)) # Print first 10 rows as feedback
