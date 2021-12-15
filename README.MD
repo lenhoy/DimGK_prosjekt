@@ -1,7 +1,8 @@
 # TMM4135 Dimensjonering basert på elementmetoden prosjekt del 2
 
 ## Installasjon
-Kopier filene i mappen "calfem" fra handout zip filen til lokal installasjon av calfem (i virtual env/Lib/site-packages)
+Siden mye av koden baserer seg på gammel calfem og python må man bruke de justerte versjonene av calfem filene.  
+Kopier filene i mappen "calfem" til lokal installasjon av calfem (i virtual env/Lib/site-packages)
 
 
 Dersom du ikke har pipenv:  
@@ -12,7 +13,7 @@ Derretter gå til mappen med pipfile og kjør:
 ```
 pipenv install
 ```  
-Dette vil installere numpy, scipy, calfem-python og gmsh i et
+Dette vil installere alt du trenger i et
 virtuelt miljø.  
 
 Når dette er ferdig, kjør 
