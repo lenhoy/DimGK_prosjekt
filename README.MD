@@ -27,3 +27,7 @@ programmet du bruker.
 Dersom det virtuelle miljøet ikke dukker opp i listen bruk  
 **`pipenv --venv`** til å printe ut plasseringen til miljøet i
 terminal.
+
+## Data Eksport
+`cantilever_calc_loop.py` bygger opp et dictionary med endeforskyvninger og tilhørende noder mm. Dette gjøres om til et pandas dataframe og videre til csv og excel filer som lagres.  
+Vi brukte Microsoft SandDance til å visualisere dataen og det er lagret et par "snapshots" i sanddance mappen her. Gå til [SandDance]([https://link](https://microsoft.github.io/SandDance/app/)) for å laste opp `exportdata_x40.csv` og `exportdata.snapshots` filene for å interaktivt se på dataen.
