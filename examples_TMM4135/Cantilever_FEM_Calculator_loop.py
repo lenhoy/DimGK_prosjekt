@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Oct 21 16:38:14 2018
 
-@author: bjohau
-"""
 import os
 import sys
 scriptPath = os.path.realpath(os.path.dirname(sys.argv[0]))
@@ -239,8 +235,6 @@ def calculateFEM(numElementNodes, H, L, thickness, eq, endLoadXY, ep, Dmat, numN
         print("Total reaction force in x:{:12.3e} y:{:12.3e})".format(R0Sum[0],R0Sum[1]))
 
 
-    # Export data array
-    exportDatarow = np.array([numElementNodes, numNodes, xC, yC, R0Sum[0], R0Sum[1], existingImpl])
     
 
     if bDrawMesh:
@@ -260,6 +254,10 @@ def calculateFEM(numElementNodes, H, L, thickness, eq, endLoadXY, ep, Dmat, numN
             title=elTypeInfo[1])
 
         cfv.showAndWait()
+    
+
+    # Export data array
+    exportDatarow = np.array([numElementNodes, numNodes, xC, yC, R0Sum[0], R0Sum[1], existingImpl])
     
     return exportDatarow
 
@@ -290,10 +288,6 @@ if __name__=="__main__":
 
 #_______________________  Define element type, cantilever dimentions and material properties ________________________________
 
-    # Select element type
-    numElementNodes = 9  # Valid numbers 3, 33, 4, 44, 6, 9
-    # 33 and 44 are existing 3 and 4 node element-types
-
     # Cantilever with dimensions H x L x thickness
     H         =  2.0
     L         = 10.0
@@ -321,13 +315,14 @@ if __name__=="__main__":
             [  nu, 1.0,  0.],
             [  0.,  0., (1.0-nu)/2.0]]) * E/(1.0-nu**2)
     
-#___________________________________________________________________________________________________________________
+#_______________________________________________    Looping     _______________________________________________________
     
     # Init dictionary for saving datarows during loop
     dict = {"Nods pr el":[],"Tot nods":[],"xC":[],"yC":[],"Tot.react.force x":[],"Tot.react.force y":[],"exist impl.":[]}
 
 
-    elementTypes = [3,33,4,44,6,9]
+    elementTypes = [3,33,4,44,6,9] # Valid numbers 3, 33, 4, 44, 6, 9
+    # 33 and 44 are existing 3 and 4 node element-types
 
     for elt in elementTypes: # Calculate for all elementtypes
         
@@ -349,5 +344,5 @@ if __name__=="__main__":
     # Export to csv file
     exportData = pd.DataFrame(dict, columns=["Nods pr el","Tot nods","xC","yC","Tot.react.force x","Tot.react.force y","exist impl."])
     exportData.to_csv("exportdata.csv")
-    exportData.to_excel("exportdata.xlsx")
+    #exportData.to_excel("exportdata.xlsx")
     print("newdataRow\n",exportData.head(10)) # Print first 10 rows as feedback
