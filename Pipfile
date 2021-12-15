@@ -8,6 +8,7 @@ numpy = "*"
 gmsh = "*"
 scipy = "*"
 calfem-python = "*"
+pandas = "*"
 
 [dev-packages]
 
