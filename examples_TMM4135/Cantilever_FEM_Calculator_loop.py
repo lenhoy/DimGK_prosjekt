@@ -4,13 +4,19 @@ Created on Sun Oct 21 16:38:14 2018
 
 @author: bjohau
 """
+import os
+import sys
+scriptPath = os.path.realpath(os.path.dirname(sys.argv[0]))
+os.chdir(scriptPath)
+sys.path.append("../calfem")
+
 import numpy as np
 import pandas as pd
 import json
-import calfem.core as cfc
+import core as cfc
 import tri_with_TODO as tri
 import quads_with_TODO as quad
-import calfem.vis as cfv
+import vis as cfv
 
 
 def calculateFEM(numElementNodes, H, L, thickness, eq, endLoadXY, ep, Dmat, numNodesX, numNodesY, prints=False, bDrawMesh=False):
