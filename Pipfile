@@ -9,6 +9,7 @@ gmsh = "*"
 scipy = "*"
 calfem-python = "*"
 pandas = "*"
+openpyxl = "*"
 
 [dev-packages]
 
